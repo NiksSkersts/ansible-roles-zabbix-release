@@ -1,0 +1,16 @@
+*.retry
+.ansible/
+.cache/
+.molecule/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vault_pass*
+vault_pass*
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~

@@ -1,0 +1,51 @@
+---
+
+- name: Copy release package from controller
+  when: zabbix_release is not url
+  block:
+    - name: Copy release package from controller
+      ansible.builtin.copy:
+        src: "{{ zabbix_release }}"
+        dest: "/tmp/{{ zabbix_release | basename }}"
+        mode: "0644"
+
+    - name: Calculate local package checksum
+      when: 
+        - zabbix_release is not url
+        - zabbix_release_checksum | length > 0
+      ansible.builtin.stat:
+        path: "/tmp/{{ zabbix_release | basename }}"
+        checksum_algorithm: sha256
+      register: zabbix_local_pkg
+
+    - name: Verify local package checksum
+      when:
+        - zabbix_release is not url
+        - zabbix_release_checksum | length > 0
+      ansible.builtin.assert:
+        that:
+          - "'sha256:' ~ zabbix_local_pkg.stat.checksum == zabbix_release_checksum"
+        fail_msg: "Release package checksum mismatch."
+
+- name: Download Zabbix repo package
+  when: zabbix_release is url
+  block:
+    - name: Download Zabbix repo package
+      when: zabbix_release is url
+      ansible.builtin.get_url:
+        url: "{{ zabbix_release }}"
+        dest: "/tmp/{{ zabbix_release | basename }}"
+        checksum: "{{ zabbix_release_checksum | default(omit) }}"
+        mode: "0644"
+
+- name: Install Zabbix repo package
+  become: true
+  ansible.builtin.apt:
+    deb: "/tmp/{{ zabbix_release | basename }}"
+  register: zabbix_release_install
+
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ 0 if zabbix_release_install is changed else zabbix_apt_cache_valid_time }}"
