@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  role_name: zabbix_release
+  namespace: niksskersts
+  author: Niks Šķērsts
+  description: Install or purge the Zabbix APT repository release package.
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - trixie
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+        - resolute
+  galaxy_tags:
+    - zabbix
+    - monitoring
+    - repository
+    - apt
+dependencies: []
