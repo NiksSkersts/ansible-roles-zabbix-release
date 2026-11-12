@@ -1,4 +1,7 @@
 ---
+- name: Gather facts
+  ansible.builtin.setup:
+
 - name: Purge Zabbix repository
   when: zabbix_release_purge | default(false) | bool
   ansible.builtin.import_tasks: purge_release.yml
