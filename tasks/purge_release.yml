@@ -1,0 +1,33 @@
+---
+
+- name: Find Zabbix APT source files
+  ansible.builtin.find:
+    paths: "{{ zabbix_apt_sources_directory }}"
+    patterns: "{{ zabbix_apt_source_patterns }}"
+    file_type: any
+    recurse: false
+  register: zabbix_apt_source_files
+
+- name: Remove Zabbix APT source files
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ zabbix_apt_source_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: item.isreg or item.islnk
+
+- name: Remove Zabbix config files
+  become: true
+  ansible.builtin.file:
+    path: "{{ zabbix_config_directory }}"
+    state: absent
+    recurse: true
+
+- name: Purge Zabbix repository release package
+  become: true
+  ansible.builtin.apt:
+    name: "{{ zabbix_release_package }}"
+    state: absent
+    purge: true

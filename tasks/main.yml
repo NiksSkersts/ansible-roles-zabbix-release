@@ -1,0 +1,8 @@
+---
+- name: Purge Zabbix repository
+  when: zabbix_release_purge | default(false) | bool
+  ansible.builtin.import_tasks: purge_release.yml
+
+- name: Install Zabbix repository
+  when: zabbix_release_install | default(true) | bool
+  ansible.builtin.import_tasks: install_release.yml
