@@ -1,0 +1,2 @@
+---
+zabbix_release_package_path: "{{ zabbix_release_download_directory }}/{{ zabbix_release_source | basename }}"

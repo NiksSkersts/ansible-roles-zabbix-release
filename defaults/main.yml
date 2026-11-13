@@ -1,11 +1,13 @@
 ---
-# It is pointless to change zabbix_version to earlier as 8.0 changed the URL structure.
-zabbix_version: "8.0"
-zabbix_apt_cache_valid_time: 3600
-zabbix_release: "https://repo.zabbix.com/zabbix/{{ zabbix_version }}/release/{{ ansible_distribution | lower }}/pool/main/z/zabbix-release/zabbix-release_latest_{{ zabbix_version }}+{{ ansible_distribution | lower }}{{ ansible_distribution_version | lower }}_all.deb"
+zabbix_release_install: true
+zabbix_release_purge: false
+# It is pointless to change zabbix_release_version to earlier as 8.0 changed the URL structure.
+zabbix_release_version: "8.0"
+zabbix_release_apt_cache_valid_time: 3600
+zabbix_release_source: "https://repo.zabbix.com/zabbix/{{ zabbix_release_version }}/release/{{ ansible_facts.distribution | lower }}/pool/main/z/zabbix-release/zabbix-release_latest_{{ zabbix_release_version }}+{{ ansible_facts.distribution | lower }}{{ ansible_facts.distribution_version }}_all.deb"
 zabbix_release_checksum: ""
 zabbix_release_package: zabbix-release
-zabbix_apt_sources_directory: /etc/apt/sources.list.d
-zabbix_apt_source_patterns:
+zabbix_release_download_directory: /var/cache/zabbix-release
+zabbix_release_apt_sources_directory: /etc/apt/sources.list.d
+zabbix_release_apt_source_patterns:
   - '*zabbix*'
-zabbix_config_directory: /etc/zabbix

@@ -1,11 +1,14 @@
 ---
 - name: Gather facts
+  when: ansible_facts.distribution is not defined
   ansible.builtin.setup:
+    gather_subset:
+      - min
 
 - name: Purge Zabbix repository
-  when: zabbix_release_purge | default(false) | bool
+  when: zabbix_release_purge | bool
   ansible.builtin.import_tasks: purge_release.yml
 
 - name: Install Zabbix repository
-  when: zabbix_release_install | default(true) | bool
+  when: zabbix_release_install | bool
   ansible.builtin.import_tasks: install_release.yml
